@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function ChatPage() {
   return (
-    <div>
+    <div className="flex flex-col items-start mt-5 w-full">
       <Link
         className="text-gray-500 w-full flex  "
         href="/"
@@ -16,7 +16,7 @@ export default function ChatPage() {
         <span>Voltar ao dashboard</span>
       </Link>
 
-      <main className="flex flex-col gap-4  md:flex-row">
+      <main className="flex flex-col gap-4 w-full md:flex-row">
         <ParticipantsList className="order-1" />
 
         <ChatRoom className="order-3 md:order-2" />

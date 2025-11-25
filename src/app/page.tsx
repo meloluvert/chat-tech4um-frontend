@@ -34,7 +34,7 @@ const forums = [
     size: "sm",
   },
   {
-    title: "Designers_na_firma",
+    title: "Designers na Firma",
     creator: "Lucas Gomes",
     people: 55,
     description:

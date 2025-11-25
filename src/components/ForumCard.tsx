@@ -22,7 +22,7 @@ export function ForumCard({
 
   return (
     <div className={`${baseStyle} ${sizeStyle}`}>
-      <Link href="/chat/3">
+      <Link href="/forum/3">
       <div className="flex flex-col gap-1">
         {highlight && (
           <span className="text-[#EB520E] text-sm font-semibold">

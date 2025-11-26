@@ -1,7 +1,7 @@
 export type ChatParticipant = {
     id: string;
     name: string;
-    color: string; 
+    color?: string; 
     avatarUrl?: string;
     online: boolean;
   };
@@ -9,9 +9,9 @@ export type ChatParticipant = {
   export type Message = {
     id: string;
     sender: {
-      id: string;
-      name: string;
-      avatarUrl: string;
+      id: string | null;
+      name: string | null;
+      avatarUrl: string | null;
       color: string
     };
     content: string;

@@ -4,21 +4,15 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { authApi } from "@/lib/api/auth";
 
 type User = {
-  id: number;
   username: string;
   email: string;
-  role: string;
 } | null;
 
 type AuthContextType = {
   user: User;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (
-    username: string,
-    email: string,
-    password: string
-  ) => Promise<void>;
+  register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 };
 
@@ -29,24 +23,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) setUser(JSON.parse(stored));
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser));
+    }
     setLoading(false);
   }, []);
 
   async function login(email: string, password: string) {
-    const response = await authApi.login({ email, password });
+    const response = await authApi.login({ email, password, role: "USER" });
 
-    const token = response.data.accessToken;
+    const token = response.data.token; // pega o token
+    const userData: User = {
+      username: response.data.username,
+      email: response.data.email,
+    };
+
     localStorage.setItem("token", token);
-
-    const userData = response.data.user;
-    setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
   }
 
   async function register(username: string, email: string, password: string) {
-    await authApi.register({ username, email, password });
+    await authApi.register({ username, email, password, role: "USER" });
   }
 
   function logout() {

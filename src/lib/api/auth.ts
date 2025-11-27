@@ -1,12 +1,11 @@
-
-import { api } from "./index";
+import { publicApi } from "./index";
 
 export const authApi = {
-  register(data: { username: string; email: string; password: string }) {
-    return api.post("/api/auth/register", data);
+  register(data: { username: string; email: string; password: string; role: string }) {
+    return publicApi.post("/auth/register", data);
   },
 
-  login(data: { email: string; password: string }) {
-    return api.post("/api/auth/login", data);
+  login(data: { email: string; password: string; role:string }) {
+    return publicApi.post("/auth/login", data);
   },
 };

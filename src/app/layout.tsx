@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
+import { ToastContainer } from "react-toastify";
+import { AuthProvider } from "@/contexts/AuthContext";
 import {ChatProvider} from "@/contexts/ChatContext"
 import "./globals.css";
 
@@ -26,16 +28,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
+      <AuthProvider>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <div className="max-w-7xl mx-auto p-6 flex flex-col items-center justify-center">
+        <ToastContainer position="top-right" autoClose={3000} />
+
           <Header/>
           <ChatProvider>
           {children}
           </ChatProvider>
         </div>
       </body>
+      </AuthProvider>
     </html>
   );
 }

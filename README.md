@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tech4um - Frontend
 
-## Getting Started
+Frontend do Tech4um, plataforma de fóruns e chat em tempo real. Projeto desenvolvido como parte do **Ninja Startup 2025**.
 
-First, run the development server:
+## Backend Integrado
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Repositório**: [tech4um-ws](https://github.com/pedrohpimentel/tech4um-ws)
+- **Base URL REST**: `http://localhost:8080/api`
+- **Base URL WebSocket**: `ws://localhost:8080/ws`
+- **Formato de dados**: `application/json`
+- **Autenticação**: JWT Bearer Token
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tecnologias Utilizadas
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Categoria | Tecnologias |
+|-----------|-------------|
+| **Framework** | Next.js 14 (App Router) |
+| **UI** | Tailwind CSS, shadcn/ui |
+| **Estado** | React Context (AuthContext, ChatContext, ThemeContext) |
+| **HTTP** | Axios |
+| **Notificações** | React Toastify |
+| **Ícones** | Lucide React |
+| **Formulários** | React Hook Form |
+| **WebSocket** | WebSocket nativo (integração com STOMP) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Funcionalidades Implementadas
 
-## Learn More
+### Autenticação
+-  **Login** (`POST /api/auth/login`) - Retorna JWT
+-  **Cadastro** (`POST /api/auth/register`)
+-  Logout e proteção de rotas
+-  Persistência de token (localStorage)
+-  Context global de autenticação
 
-To learn more about Next.js, take a look at the following resources:
+### Fóruns
+-  **Listagem** (`GET /api/forums`)
+-  **Detalhes** (`GET /api/forums/{id}`)
+-  **Criação** (`POST /api/forums`) - Requer JWT
+-  **Histórico** (`GET /api/forums/{id}/messages`) - Requer JWT
+-  Busca em tempo real
+-  Cards responsivos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Chat
+-  Carregamento de histórico
+-  Envio de mensagens via WebSocket
+-  Interface com avatares
+-  Suporte a Enter para envio
+-  Toasts de feedback
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### UI/UX
+-  Dark Mode (ThemeContext)
+-  Header responsivo
+-  Modais (Login, CreateForum)
+-  Glassmorphism e backdrop blur
+-  Design mobile-first
 
-## Deploy on Vercel
+## Endpoints Implementados
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Método | Endpoint | Descrição | Requer JWT |
+|--------|----------|-----------|------------|
+| POST | `/api/auth/register` | Cria novo usuário | Não |
+| POST | `/api/auth/login` | Obtém token JWT | Não |
+| GET | `/api/forums` | Lista fóruns | Não |
+| GET | `/api/forums/{id}` | Detalhes do fórum | Não |
+| POST | `/api/forums` | Cria fórum | Sim |
+| GET | `/api/forums/{id}/messages` | Histórico de mensagens | Sim |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Páginas/Rotas
+
+| Rota | Descrição |
+|------|-----------|
+| `/` | Home - Lista de fóruns + busca |
+| `/cadastro` | Cadastro de usuários |
+| `/forum/:id` | Fórum específico + chat |
+

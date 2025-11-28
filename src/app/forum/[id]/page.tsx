@@ -1,6 +1,6 @@
 "use client";
 
-import { ParticipantsList } from "@/components/chat/ParticipantsList";
+// import { ParticipantsList } from "@/components/chat/ParticipantsList";
 import { ChatRoom } from "@/components/chat/ChatRoom";
 import { ArrowLeft } from "lucide-react";
 import { RoomsSidebar } from "@/components/chat/RoomsSidebar";

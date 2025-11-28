@@ -25,7 +25,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!token) return;
 
-    const socket = new WebSocket(process.env.NEXT_PUBLIC_WS_URL);
+    const socket = new WebSocket(process.env.NEXT_PUBLIC_WS_URL as any);
 
     socket.onopen = () => {
       console.log("WebSocket connected");
@@ -75,6 +75,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   function addMessage(raw: any) {
     const msg: Message = {
+      id: `${raw.senderUsername.raw.forumId.Date().toISOString()}`,
       forumId: raw.forumId,
       content: raw.content,
       senderUsername: raw.senderUsername || "anônimo",

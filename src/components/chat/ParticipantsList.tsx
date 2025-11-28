@@ -1,4 +1,4 @@
-"use client";
+{/*"use client";
 
 import Image from "next/image";
 import { Search } from "lucide-react";
@@ -52,3 +52,4 @@ export function ParticipantsList({ className = "", ...props }:ParticipantsListPr
     </div>
   );
 }
+*/}

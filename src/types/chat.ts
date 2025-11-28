@@ -7,7 +7,7 @@ export type ChatParticipant = {
   };
   
   export type Message = {
-    id: Key | null | undefined;
+    id: string | null | undefined;
     senderUsername?: string
     createdAt?: string
     forumId: string;

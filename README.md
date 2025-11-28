@@ -40,12 +40,6 @@ Frontend do Tech4um, plataforma de fóruns e chat em tempo real. Projeto desenvo
 -  Busca em tempo real
 -  Cards responsivos
 
-### Chat
--  Carregamento de histórico
--  Envio de mensagens via WebSocket
--  Interface com avatares
--  Suporte a Enter para envio
--  Toasts de feedback
 
 ### UI/UX
 -  Dark Mode (ThemeContext)

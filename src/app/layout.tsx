@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "@/contexts/AuthContext";
 import {ChatProvider} from "@/contexts/ChatContext"
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,11 +30,14 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <AuthProvider>
+      <ThemeProvider >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <div className="max-w-7xl mx-auto p-6 flex flex-col items-center justify-center">
         <ToastContainer position="top-right" autoClose={3000} />
+
+  
 
           <Header/>
           <ChatProvider>
@@ -41,6 +45,7 @@ export default function RootLayout({
           </ChatProvider>
         </div>
       </body>
+      </ThemeProvider>
       </AuthProvider>
     </html>
   );

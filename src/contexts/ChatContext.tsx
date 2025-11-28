@@ -3,7 +3,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { ChatRoomData, Message } from "@/types/chat";
 import { forumApi } from "@/lib/api/forums";
-import { createSocketClient } from "@/lib/sockets";
 import { useAuth } from "@/contexts/AuthContext";
 
 type ChatContextType = {
@@ -18,37 +17,41 @@ type ChatContextType = {
 const ChatContext = createContext<ChatContextType>(null!);
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
-  const [client, setClient] = useState<any>(null);
+  const [ws, setWs] = useState<WebSocket | null>(null);
   const [currentRoom, setCurrentRoom] = useState<ChatRoomData | null>(null);
   const [selectedUser, setSelectedUser] = useState<{ email: string; name: string } | null>(null);
   const { token, user } = useAuth();
+
   useEffect(() => {
-    console.log("🔍 CLIENT ATUALIZADO:", client);
-  }, [client]);
-  
-  useEffect(() => {
-    console.log("o token", token)
     if (!token) return;
 
-    const stomp = createSocketClient(token);
+    const socket = new WebSocket(process.env.NEXT_PUBLIC_WS_URL);
 
-    stomp.onConnect = () => {
-      console.log("🔥 STOMP CONNECTED");
-      setClient(stomp);
-      console.log("o clinnet é:", client)
+    socket.onopen = () => {
+      console.log("WebSocket connected");
+      socket.send(JSON.stringify({ type: "auth", token }));
     };
 
-    stomp.onStompError = (err) => {
-      console.log("❌ STOMP ERROR:", err);
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      addMessage(data);
     };
 
-    stomp.activate();
+    socket.onclose = () => {
+      console.log("WebSocket disconnected");
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    setWs(socket);
 
     return () => {
-      console.log("🧹 limpando stomp");
-      stomp.deactivate(); // ⚠️ NÃO É ASYNC
+      socket.close();
     };
   }, [token]);
+
   async function setRoomFromAPI(forumId: string) {
     const forumRes = await forumApi.getById(forumId);
     const msgRes = await forumApi.getMessages(forumId);
@@ -58,7 +61,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       name: forumRes.data.title,
       description: forumRes.data.description,
       creator: forumRes.data.author.username,
-      createdAt:  forumRes.data.createdAt,
+      createdAt: forumRes.data.createdAt,
       messages: msgRes.data.map((m: any) => ({
         forumId,
         content: m.content,
@@ -68,37 +71,14 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       participants: [],
       peopleCount: 0,
     });
-
-    if (!client) {
-      console.log("⌛ cliente ainda não conectado, esperando...", token);
-      return;
-    }
-
-    try {
-      client.unsubscribe("PUBLIC");
-      client.unsubscribe("PRIVATE");
-    } catch {}
-
-    console.log("🔔 SUB >> /topic/forum." + forumId);
-
-    client.subscribe(`/topic/forum.${forumId}`, (message) => {
-      addMessage(JSON.parse(message.body));
-    }, { id: "PUBLIC" });
-
-    client.subscribe(`/user/private`, (message) => {
-      addMessage(JSON.parse(message.body));
-    }, { id: "PRIVATE" });
   }
 
-  // ============================================================
-  // 🔥 ADD MESSAGE
-  // ============================================================
   function addMessage(raw: any) {
     const msg: Message = {
       forumId: raw.forumId,
       content: raw.content,
-      senderUsername: raw.senderUsername,
-      createdAt: raw.createdAt,
+      senderUsername: raw.senderUsername || "anônimo",
+      createdAt: raw.createdAt || new Date().toISOString(),
       recipientEmail: raw.recipientEmail || null,
     };
 
@@ -107,30 +87,22 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // ============================================================
-  // 🔥 SEND MESSAGE
-  // ============================================================
   function sendMessage(content: string) {
-    if (!client || !currentRoom) return;
-  
+    if (!ws || !currentRoom || !content.trim()) return;
+
     const msg = {
+      type: "message",
       forumId: currentRoom.id,
       content,
-      recipientEmail: selectedUser?.email ?? null
-    };
-  
-    client.publish({
-      destination: "/app/chat.send",
-      body: JSON.stringify(msg),
-    });
-  
-    addMessage({
-      ...msg,
+      recipientEmail: selectedUser?.email ?? null,
       senderUsername: user?.username ?? "desconhecido",
-      createdAt: new Date().toISOString()
-    });
+      createdAt: new Date().toISOString(),
+    };
+
+    ws.send(JSON.stringify(msg));
+
+    addMessage(msg);
   }
-  
 
   return (
     <ChatContext.Provider

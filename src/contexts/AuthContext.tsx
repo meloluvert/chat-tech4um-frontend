@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { authApi } from "@/lib/api/auth";
+import { toast } from "react-toastify";
 
 type User = {
   username: string;
@@ -60,8 +61,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    
     setToken("");           
     setUser(null);
+
+    toast.success("Logout realizado com sucesso!");
   }
 
   return (

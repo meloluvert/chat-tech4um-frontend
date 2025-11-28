@@ -9,7 +9,6 @@ export default function HomePage() {
   const [forums, setForums] = useState([]);
   const [filtered, setFiltered] = useState([]);
 
-  // Carrega fóruns
   useEffect(() => {
     async function load() {
       const res = await forumApi.getForums();
@@ -19,7 +18,6 @@ export default function HomePage() {
     load();
   }, []);
 
-  // Função chamada pela SearchBar
   function handleSearch(query: string) {
     const q = query.toLowerCase();
 
@@ -32,9 +30,9 @@ export default function HomePage() {
   }
 
   return (
-    <main className="w-6xl">
+    <main className="w-full">
       <h1 className="text-3xl font-bold mt-10">Opa!</h1>
-      <p className="text-gray-600 mt-1">Sobre o que gostaria de falar hoje?</p>
+      <p className="text-gray-600 mt-1 dark:text-white">Sobre o que gostaria de falar hoje?</p>
 
       <SearchBar onSearch={handleSearch} />
 
@@ -43,7 +41,7 @@ export default function HomePage() {
           <ForumCard
             key={forum.id}
             {...forum}
-            size="md"         // padrão
+            size="md"         
             highlight={false} 
             people={0}
           />

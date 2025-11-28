@@ -36,7 +36,6 @@ export function ImagePicker({ images, setImages }: ImagePickerProps) {
 
   return (
     <div className="flex flex-col gap-2">
-      {/* Botão invisível */}
       <input
         ref={inputRef}
         type="file"
@@ -46,7 +45,6 @@ export function ImagePicker({ images, setImages }: ImagePickerProps) {
         onChange={handleFiles}
       />
 
-      {/* Área de previews */}
       <div className="flex gap-2 flex-wrap">
         {images.map((src, index) => (
           <div
@@ -55,7 +53,7 @@ export function ImagePicker({ images, setImages }: ImagePickerProps) {
           >
             <img src={src} alt="preview" className="w-full h-full object-cover" />
 
-            {/* Botão remover */}
+
             <button
               className="absolute top-1 right-1 bg-black/60 text-white p-1 rounded-full"
               onClick={() => removeImage(index)}
@@ -66,7 +64,6 @@ export function ImagePicker({ images, setImages }: ImagePickerProps) {
         ))}
       </div>
 
-      {/* Botão para escolher imagens */}
       <button
         type="button"
         onClick={handlePick}

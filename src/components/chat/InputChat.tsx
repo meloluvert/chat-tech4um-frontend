@@ -35,10 +35,9 @@ export function InputChat({ input, setInput, handleSend }: InputChatProps) {
   return (
     <footer
       className={`mt-4 p-5 rounded-b-2xl ${
-        selectedUser ? `bg-orange-500` : `bg-blue-500`
+        selectedUser ? `bg-orange-500` : `bg-blue-500 dark:bg-[#145a8a]`
       }`}
     >
-      {/* Área Superior */}
       <div className="flex items-center p-1 gap-1 flex-wrap md:flex-nowrap">
         <div className="text-sm text-white mb-1 grow flex">
           Enviando para:{" "}
@@ -58,7 +57,7 @@ export function InputChat({ input, setInput, handleSend }: InputChatProps) {
           )}
         </div>
 
-        {/* Botão EMOJI */}
+ 
         <div className="relative">
           <button
             type="button"
